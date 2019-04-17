@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 
 Button* StartBtn, *CreditBtn, *MainBtn, *PauseBtn, *SongBtn[5], * HowtoBtn, *ExitBtn, *PlayBtn, *HowToButton[3];
 State currentState;
@@ -6,7 +6,6 @@ SoundManager Sound;
 MovingAnimation* MovingSea, *MovingStar, *MovingMermaid;
 FishButton* Fish;
 CAnimation* BGAnim, *Char1, *Char2_1, *Char2_2, *Char3, *Tail_, *mainStar, *subStar;
-//CAnim* AnimationMamager;
 Background* BG;
 Image* Star, *Song[5], *Cloud, *Char3_Base;
 bool isStart = true, gameQuit = false, isPause = true, isMainFirst = true, isSecretFirst = false, Anim[4] = { false, };
@@ -371,7 +370,7 @@ void Climax() {
 void MusicStop() {
 	int the6ThButton;
 	if (Sound.GetCurrentState() == 1) {
-		switch (Sound.GetCurrentSongID()) {
+		switch (Sound.GetCurrentSongID()) { // 음악 자동 넘기기
 		case 0:
 			if ((int)count > 240) {
 				count = 0;
@@ -456,21 +455,8 @@ void AnimationType(int Type) {
 	else
 		isPause = false;
 }
-void BtnStart() {
-	if (isStart) 
-		currentState = INGAME;
-	
-	else 
-		currentState = MAIN;
-	Sound.ChangeCurrentState(0);
-	Sound.SongStateSet();
-	AnimationType();
-	count = 0;
-	isStart = !isStart;
-	sndPlaySound("Sound\\Click.wav", SND_ASYNC);
-	printf("S");
-}
 
+//음악 재생 버튼
 void BtnSong1() {
 	if (Sound.GetCurrentSongID() != 0) {
 		if (Sound.GetCurrentState() == 1) {
@@ -546,6 +532,22 @@ void BtnSong5() {
 	}
 }
 
+//메인 화면 버튼
+void BtnStart() {
+	if (isStart)
+		currentState = INGAME;
+
+	else
+		currentState = MAIN;
+	Sound.ChangeCurrentState(0);
+	Sound.SongStateSet();
+	AnimationType();
+	count = 0;
+	isStart = !isStart;
+	sndPlaySound("Sound\\Click.wav", SND_ASYNC);
+	printf("S");
+}
+
 void BtnCredit() {
 	currentState = CREDIT;
 	sndPlaySound("Sound\\Click.wav", SND_ASYNC);
@@ -563,7 +565,7 @@ void BtnExit() {
 	sndPlaySound("Sound\\Click.wav", SND_ASYNC);
 	gameQuit = true;
 }
-
+// 게임 내부 버튼
 void BtnMain() {
 	if (currentState != CREDIT) {
 		if (Sound.GetCurrentState() < 5)
@@ -594,7 +596,7 @@ void BtnPlay() {
 		printf("II");
 	}
 }
-
+// 히든 버튼
 void FishButton_() {
 	if (Sound.GetCurrentSongID() != 5) {
 		currentState = Secret;
@@ -634,7 +636,7 @@ bool CSystem::Initialize()
 	m_pInputManager = new CInputManager;
 	m_pInputManager->SetInputHandler(this);
 	//===============================
-	//������Ʈ �ʱ�ȭ �ڵ�
+	//오브젝트 초기화 코드
 	BG =								new Background(m_pRender);
 
 	StartBtn =					new Button(m_pRender, "Image\\playButton_Normal.png",	"Image\\playButton_Down.png",	"Image\\playButton_Over.png",	170,		474,	BtnStart);
@@ -726,7 +728,7 @@ void CSystem::Pulse()
 			MusicStop();
 		}
 		//===============================
-		//������Ʈ ���μ��� �ڵ� 
+		//오브젝트 프로세스 코드 
 		switch (currentState) {
 		case MAIN:
 			if (isMainFirst) {
@@ -976,7 +978,7 @@ void CSystem::Pulse()
 void CSystem::Terminate()
 {
 	//===============================
-	//������Ʈ ����/�����ڵ�
+	//오브젝트 종료/해제코드
 	StartBtn						->Release();
 	CreditBtn					->Release();
 	MainBtn						->Release();
@@ -1034,7 +1036,7 @@ void CSystem::MouseHandler(SDL_Event evnt, MOUSESTATE mouseState)
 	if (evnt.key.keysym.sym == SDLK_ESCAPE)	 m_bIsGameRun = SDL_FALSE;
 	if (evnt.type == SDL_MOUSEBUTTONDOWN) {
 		if (currentState == Secret) currentState = MAIN;
-		if (mouseState.btn[MouseButton::LEFT]) {
+		if (mouseState.btn[MouseButton::LEFT]) { // 버튼 누름 여부
 			StartBtn->						MouseDown(mouseState.x, mouseState.y);
 			CreditBtn->					MouseDown(mouseState.x, mouseState.y);
 			MainBtn->						MouseDown(mouseState.x, mouseState.y);
@@ -1050,7 +1052,7 @@ void CSystem::MouseHandler(SDL_Event evnt, MOUSESTATE mouseState)
 	}
 	
 	if (evnt.type == SDL_MOUSEBUTTONUP) {
-		if (mouseState.btn[MouseButton::LEFT]) {
+		if (mouseState.btn[MouseButton::LEFT]) { // 버튼 뗌 여부
 			StartBtn->						MouseUp(mouseState.x, mouseState.y);
 			CreditBtn->					MouseUp(mouseState.x, mouseState.y);
 			MainBtn->						MouseUp(mouseState.x, mouseState.y);
@@ -1066,7 +1068,7 @@ void CSystem::MouseHandler(SDL_Event evnt, MOUSESTATE mouseState)
 		}
 	}
 
-	if (evnt.type == SDL_MOUSEMOTION) {
+	if (evnt.type == SDL_MOUSEMOTION) { // 버튼 갖다 댐 여부
 		StartBtn->							MouseOver(mouseState.x, mouseState.y);
 		CreditBtn->						MouseOver(mouseState.x, mouseState.y);
 		MainBtn->							MouseOver(mouseState.x, mouseState.y);

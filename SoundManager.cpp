@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 
 SoundManager::SoundManager()
 {
@@ -16,8 +16,8 @@ void SoundManager::AddSong(const char * songDir)
 void SoundManager::SongStateSet()
 {
 	char result[128] = "";
-	strcat(result, (char*)state[cmdType]);
-	strcat(result, (char*)songList[currentSong]);
+	strcat(result, (char*)state[cmdType]); // 재생, 일시정지, 정지
+	strcat(result, (char*)songList[currentSong]); // 재생할 곡 (경로 및 파일 명)
 	printf("%d\n", mciSendString(result, NULL, 0, NULL));
 }
 
